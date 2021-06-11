@@ -1,9 +1,7 @@
 # Mivni2
 
 Mivni Hw2 wet assignment. 
-implementation of a Car dealership manager/
-question- how does one join the two groups? what is the new group called. it seems that they
-would both point to the carAvltree.
+implementation of a Car dealership manager
 Data stucture over view:
 unionFind implementaion on N dealerships. 
                       the members are the dealerships, 

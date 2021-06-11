@@ -31,9 +31,21 @@ public:
             array[i] = array[i + 1];
         }
     }
+
+    // doubles capacity if it has to and deletes reference to current array.
+    void resize() {
+        capacity *= GROWTH_FACTOR;
+        T *temp = new T[capacity];
+        for(int i = 0; i < size; i++) {
+            temp[i] = array[i];
+        }
+        delete [] array;
+        array = temp;
+    }
+
     // inserts an element at index
     void insertAt(int element, int index) {
-        assert(0 <= index && index <= _size-1);
+        assert(0 <= index && index < _size);
         if(_size == capacity) {
             resize();
         }
@@ -52,19 +64,10 @@ public:
         return _size;
     }
 
-    // doubles capacity if it has to and deletes reference to current array.
-    void resize() {
-        capacity *= GROWTH_FACTOR;
-        T *temp = new T[capacity];
-        for(int i = 0; i < size; i++) {
-            temp[i] = array[i];
-        }
-        delete [] array;
-        array = temp;
-    }
 
     // returns the value stored at index pos
     T get(int index) {
+        assert(0 <= index && index < _size);
         return array[index];
     }
 
