@@ -8,15 +8,20 @@ unionFind implementaion on N dealerships.
                       the groups are the unified dealerships. 
                       two dynamic arrays. 
   Dealership Manager{
-                      groups_array- points to the group in question, 
-                        contains the name, size by amount of cardealerships,
-                        and two trees:
-                        Id_AvlTree ranked by id, in order to update sales,
-                        Sales_AvlTree ranked by Sales, in order to 
-                        return a model by rank of sales
+                      groups_array- points to the set in question, 
+                        
                       cardealership_array points to the cardealerships
                       
                      }
+  DSset{
+    the sets of Cad dealerships
+    DSset name
+    DSsetsize by amount of cardealerships,
+    and two trees:
+    Id_AvlTree ranked by id, in order to update sales,
+    Sales_AvlTree ranked by Sales, in order to 
+    return a model by rank of sales
+  }                   
   CarDealerships{
                   Dealership Id
                 }

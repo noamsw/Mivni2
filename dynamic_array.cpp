@@ -1,3 +1,6 @@
+#ifndef DYNAMIC_ARRAY_H_
+#define DYNAMIC_ARRAY_H_
+
 #include <assert.h>
 #include <cstring>
 #include <iostream>
@@ -36,7 +39,7 @@ public:
     void resize() {
         capacity *= GROWTH_FACTOR;
         T *temp = new T[capacity];
-        for(int i = 0; i < size; i++) {
+        for(int i = 0; i < _size; i++) {
             temp[i] = array[i];
         }
         delete [] array;
@@ -74,7 +77,7 @@ public:
     // returns a reference to the value
     T& operator[](int index) {
         assert(0 <= index && index < _size);
-        return array[index]
+        return array[index];
     }
 
     void pretty_print() {
@@ -88,3 +91,5 @@ public:
         cout << "]\n";
     }
 };
+
+#endif //DYNAMIC_ARRAY_H_
