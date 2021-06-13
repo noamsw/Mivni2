@@ -17,5 +17,7 @@ bool car::operator<(const car& other)
 }
 bool car::operator>(const car& other)
 {
+    if (car_id == other.car_id)
+        return false;
     return !(*this < other);
 }
