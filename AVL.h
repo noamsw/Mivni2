@@ -54,6 +54,12 @@ public:
 		void updateRemoveSize();
 		// updates node's subtree_size after rotation
 		void updateRotationSize();
+
+		// turns AVLTree to sorted array
+		void AVLToArr(T arr[], int* index);
+
+		// turns AVLTree to ranks tree (setting each node's subtree_size)
+		void AVLToRank();	
 		
     };
 public:
@@ -100,6 +106,7 @@ public:
 	void setNodesRoot(AVLTree<T>::Node* node);
 	//turns sorted array of <T> elements to an AVLTree
 	static AVLTree<T>* arrToAVLTree(T arr[], int start, int end);
+	static AVLTree<T>* mergeAVLTrees(AVLTree<T>* tree_1, AVLTree<T>* tree_2);
 
 public:
   	// Balance the tree
@@ -981,8 +988,6 @@ void AVLTree<T>::setNodesParent(AVLTree<T>::Node* node)
 	return;
 }
 
-
-
 //setting the linked-node's Highest node
 template<typename T>
 void AVLTree<T>::setHighestNode(AVLTree<T>::Node* node)
@@ -1037,6 +1042,120 @@ AVLTree<T>* AVLTree<T>::arrToAVLTree(T arr[], int start, int end)
 	tree->setLowestNode(node);
 
 	return tree;
+}
+
+
+// turns AVLTree to sorted array
+template<typename T>
+void AVLTree<T>::Node::AVLToArr(T arr[], int* index)
+{
+	if (this->getLeftChild() != nullptr)
+	{
+		this->getLeftChild()->AVLToArr(arr, index);
+	}
+
+	arr[*index] = this->data;
+	(*index)++;
+	
+	if (this->getRightChild() != nullptr)
+	{
+		this->getRightChild()->AVLToArr(arr, index);
+	}
+}
+
+// merging two sorted arrays
+template<typename T>
+void mergeArrays(T arr_1[], int size_1, T arr_2[], int size_2, T merged_arr[], int size_merged)
+{
+	int index_1 = 0;
+	int index_2 = 0;
+	int merged_index = 0;
+	while (merged_index < size_merged)
+	{
+		// if the first array has ended
+		if (index_1 == size_1)
+		{
+			// insert the element of the second array
+			merged_arr[merged_index] = arr_2[index_2];
+			index_2++;
+		}
+
+		// if the second array has ended
+		else if (index_2 == size_2)
+		{
+			// insert the element from the first array
+			merged_arr[merged_index] = arr_1[index_1];
+			index_1++;
+		}
+
+		// if no array has ended, insert the smaller element
+		else if (arr_1[index_1] < arr_2[index_2])
+		{
+			merged_arr[merged_index] = arr_1[index_1];
+			index_1++;
+		}
+		else
+		{
+			merged_arr[merged_index] = arr_2[index_2];
+			index_2++;
+		}
+
+		merged_index++;
+	}
+}
+
+// setting node's subtree_size
+template<typename T>
+void AVLTree<T>::Node::AVLToRank()
+{
+	if (this->getLeftChild() != nullptr)
+	{
+		this->getLeftChild()->AVLToRank();
+	}
+
+	if (this->getRightChild() != nullptr)
+	{
+		this->getRightChild()->AVLToRank();
+	}
+
+	this->updateRotationSize();
+}
+
+// merging two AVLTrees
+template<typename T>
+AVLTree<T>* AVLTree<T>::mergeAVLTrees(AVLTree<T>* tree_1, AVLTree<T>* tree_2)
+{
+	// initializing an array for each tree
+	int size_1 = tree_1->root->subtree_size;
+	int size_2 = tree_2->root->subtree_size;
+	T* arr_1 = new T[size_1];
+	T* arr_2 = new T[size_2];
+	
+	// initializing an index for each tree
+	int i_1 = 0;
+	int* index_1 = &i_1;
+	int i_2 = 0;
+	int* index_2 = &i_2;
+
+	// turning each tree to array
+	tree_1->root->AVLToArr(arr_1, index_1);
+	tree_2->root->AVLToArr(arr_2, index_2);
+
+	// initializing the merged array
+	int merged_size = size_1 + size_2;
+	T* merged_arr = new T[merged_size];
+	int i = 0;
+	int* index = &i;
+
+	// merging arr_1 and arr_2 to merged_arr
+	mergeArrays(arr_1, size_1, arr_2, size_2, merged_arr, merged_size);
+
+	// turning the merged_array to AVLTree
+	AVLTree<T>* merged_tree = AVLTree<T>::arrToAVLTree(merged_arr, 0, merged_size-1);
+
+	// turning the merged AVLTree to ranks tree
+	merged_tree->root->AVLToRank();
+	return merged_tree;
 }
 
 
