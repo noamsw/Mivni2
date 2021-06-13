@@ -19,6 +19,8 @@ public:
         Node *parent;
 		//height from bottom of tree
         int height;
+		// the size of the node's subtree, node included
+		int subtree_size;
 
     	//default constructor
     	//Node();
@@ -46,6 +48,12 @@ public:
 		Node *setRightChild(Node *newRight);
 		// Set the node's height.
 		int updateHeight();
+		// increases node's subtree_size by 1
+		void updateInsertSize();
+		// decreases node's subtree_size by 1
+		void updateRemoveSize();
+		// updates node's subtree_size after rotation
+		void updateRotationSize();
 		
     };
 public:
@@ -115,6 +123,7 @@ template<typename T>
 AVLTree<T>::Node::Node(T val) {
   data = val;
   height = 0;
+  subtree_size = 1;
   parent = nullptr;
   left_child = nullptr;
   right_child = nullptr;
@@ -256,6 +265,59 @@ int AVLTree<T>::Node::updateHeight() {
   return height;
 }
 
+// update the node's subtree_size after inserting a node
+template<typename T>
+void AVLTree<T>::Node::updateInsertSize()
+{
+	// if the node has no childs
+	if(this->right_child == nullptr && this->left_child == nullptr)
+	{
+		// the subtree only contains the node itself
+		this->subtree_size = 1;
+		return;
+	}
+
+	// else, we need to add one
+	subtree_size+=1;
+}
+
+// update the node's subtree_size after removing a node
+template<typename T>
+void AVLTree<T>::Node::updateRemoveSize()
+{
+	// the size is 1 smaller since we removed a node
+	subtree_size -= 1;
+}
+
+// update the node's subtree_size after rotating the tree
+template<typename T>
+void AVLTree<T>::Node::updateRotationSize()
+{
+	// if the node has no childs
+	if (this->getLeftChild() == nullptr && this->getRightChild() == nullptr)
+	{		  
+		this->subtree_size = 1;
+		return;
+	}
+
+	// if the node has only right child
+	if (this->getLeftChild() == nullptr)
+	{
+		this->subtree_size = this->getRightChild()->subtree_size + 1;
+		return;
+	}
+
+	// if the node has only left child
+	if (this->getRightChild() == nullptr)
+	{
+		this->subtree_size = this->getLeftChild()->subtree_size + 1;
+		return;
+	}
+
+	// the node has both childs
+	this->subtree_size = this->getLeftChild()->subtree_size + this->getRightChild()->subtree_size + 1;
+}
+
 //empty tree constructor, must decide how to instantiate
 template<typename T>
 AVLTree<T>::AVLTree() {
@@ -389,9 +451,17 @@ bool AVLTree<T>::insert(const T& t) {
 		//should update to Std::exception
 			return false;
 	}
-	// From the new node upwards to the root,
-	// updated the height and make sure the
-	// subtree is balanced.
+
+	// From the new node upwards to the root updated subtree_size
+	temp = added_node;
+	while(temp != nullptr) 
+	{
+		temp->updateInsertSize();
+		temp = temp->getParent();
+	}
+
+	// From the new node upwards to the root:
+	// updated the height and make sure the subtree is balanced.
 	temp = added_node;
 	while(temp != nullptr) {
 	  temp->updateHeight();
@@ -456,9 +526,16 @@ bool AVLTree<T>::remove(const T& t) {
 							highest = highest->getParent();
 						}
 						p->setRightChild(nullptr);
-					} 
+					}
+					// update the subtree_size in the node's path
+					Node* iter = toBeRemoved;
+					while(iter->getParent())
+					{
+						iter->getParent()->updateRemoveSize();
+						iter = iter->getParent();
+					}
 					delete toBeRemoved;
-          toBeRemoved = nullptr;
+          			toBeRemoved = nullptr;
 					p->updateHeight();
 					balanceAtNode(p);
 				} 
@@ -472,6 +549,12 @@ bool AVLTree<T>::remove(const T& t) {
 					//deal with the case where the lowest value is the parent
 					lowest = toBeRemoved->getRightChild();
 					setRoot(toBeRemoved->getRightChild());
+					Node* iter = toBeRemoved;
+					while(iter->getParent())
+					{
+						iter->getParent()->updateRemoveSize();
+						iter = iter->getParent();
+					}
 					delete toBeRemoved;
 				}
 				// Otherwise, change the parent so it doesn't
@@ -487,6 +570,13 @@ bool AVLTree<T>::remove(const T& t) {
           }
 					else
 						p->setRightChild(toBeRemoved->getRightChild());
+
+					Node* iter = toBeRemoved;
+					while(iter->getParent())
+					{
+						iter->getParent()->updateRemoveSize();
+						iter = iter->getParent();
+					}
 					delete toBeRemoved;
 					p->updateHeight();
 					balanceAtNode(p);
@@ -504,8 +594,14 @@ bool AVLTree<T>::remove(const T& t) {
 				if (p == nullptr) {
 					highest = toBeRemoved->getLeftChild();
 					setRoot(toBeRemoved->getLeftChild());
+					Node* iter = toBeRemoved;
+					while(iter->getParent())
+					{
+						iter->getParent()->updateRemoveSize();
+						iter = iter->getParent();
+					}
 					delete toBeRemoved;
-          toBeRemoved = nullptr;
+          			toBeRemoved = nullptr;
 				}
 				// Otherwise, change the parent so it doesn't
 				// point to us, delete ourself, update the
@@ -606,8 +702,14 @@ bool AVLTree<T>::remove(const T& t) {
 				p->setLeftChild(replacement);
 			else
 				p->setRightChild(replacement);
+		Node* iter = toBeRemoved;
+		while(iter->getParent())
+		{
+			iter->getParent()->updateRemoveSize();
+			iter = iter->getParent();
+		}
 		delete toBeRemoved;
-    toBeRemoved = nullptr;
+    	toBeRemoved = nullptr;
 		balanceAtNode(temp_node);
 	}
 	return true;
@@ -645,6 +747,10 @@ void AVLTree<T>::rotateLeft(Node *n) {
 		p->setLeftChild(temp);
   	else
 		p->setRightChild(temp);
+		
+  // after the rotation, update node's subtree_size
+  n->updateRotationSize();
+  temp->updateRotationSize();
 }
 
 // Rotate the subtree right.
@@ -678,6 +784,10 @@ void AVLTree<T>::rotateRight(Node *n) {
 		p->setLeftChild(temp);
   	else
 		p->setRightChild(temp);
+
+  // after the rotation, update node's subtree_size
+  n->subtree_size = n->getLeftChild()->subtree_size + n->getRightChild()->subtree_size + 1;
+  temp->subtree_size = temp->getLeftChild()->subtree_size + temp->getRightChild()->subtree_size + 1;
 }
 
 // Set the root. Change the tree root to the node
@@ -735,6 +845,7 @@ void AVLTree<T>::print() {
 	  std::cout << std::endl;
 	} // for
   } 
+  std::cout << std::endl;
 } // print
 
 // --------------------------------------------------
