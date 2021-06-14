@@ -1124,9 +1124,18 @@ void AVLTree<T>::Node::AVLToRank()
 template<typename T>
 AVLTree<T>* AVLTree<T>::mergeAVLTrees(AVLTree<T>* tree_1, AVLTree<T>* tree_2)
 {
+	
 	// initializing an array for each tree
-	int size_1 = tree_1->root->subtree_size;
-	int size_2 = tree_2->root->subtree_size;
+	int size_1;
+	int size_2;
+	if(tree_1->root != nullptr)
+		size_1 = tree_1->root->subtree_size;
+	else 
+		size_1 = 0;
+	if(tree_2->root != nullptr)
+		size_2 = tree_2->root->subtree_size;
+	else 
+		size_2 = 0;
 
 	T* arr_1 = new T[size_1];
 	T* arr_2 = nullptr;
