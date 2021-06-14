@@ -58,3 +58,21 @@
 //     std::cout << arr1->get(2) << std::endl;
 //     delete arr1;
 // }
+
+
+// #include "dsunion.h"
+// #include <iostream>
+// int main(){
+//     DSUnion* union1 = new DSUnion();
+//     union1->DS_makeSet();
+//     union1->DS_makeSet();
+//     union1->DS_makeSet();
+//     union1->DS_makeSet();
+//     union1->parents->pretty_print();
+//     union1->DS_find(1)->sell(0,2);
+//     union1->DS_find(2)->sell(3,2);
+//     union1->DS_union(1,2);
+//     std::cout << "here we go:";
+//     union1->parents->pretty_print();
+//     delete union1;
+// }
