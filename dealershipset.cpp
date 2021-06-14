@@ -4,7 +4,7 @@
 // must revieve a name for the set
 // size, ID_tree, rankded_tree are empty
 DSset::DSset(int set_name):set_name(set_name){
-    size = 0;
+    size = 1;
     id_tree = new AVLTree<car>();
     try{
         ranked_tree = new AVLTree<Rankedcar>();
