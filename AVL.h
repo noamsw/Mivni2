@@ -1044,7 +1044,6 @@ AVLTree<T>* AVLTree<T>::arrToAVLTree(T arr[], int start, int end)
 	return tree;
 }
 
-
 // turns AVLTree to sorted array
 template<typename T>
 void AVLTree<T>::Node::AVLToArr(T arr[], int* index)
@@ -1128,8 +1127,19 @@ AVLTree<T>* AVLTree<T>::mergeAVLTrees(AVLTree<T>* tree_1, AVLTree<T>* tree_2)
 	// initializing an array for each tree
 	int size_1 = tree_1->root->subtree_size;
 	int size_2 = tree_2->root->subtree_size;
+
 	T* arr_1 = new T[size_1];
-	T* arr_2 = new T[size_2];
+	T* arr_2 = nullptr;
+	try
+	{
+		arr_2 = new T[size_2];
+	}
+	catch(std::exception& e)
+	{
+		delete[] arr_1;
+		throw e; // maybe change it later to return enum value
+	}
+	
 	
 	// initializing an index for each tree
 	int i_1 = 0;
@@ -1142,8 +1152,19 @@ AVLTree<T>* AVLTree<T>::mergeAVLTrees(AVLTree<T>* tree_1, AVLTree<T>* tree_2)
 	tree_2->root->AVLToArr(arr_2, index_2);
 
 	// initializing the merged array
+	T* merged_arr = nullptr;
 	int merged_size = size_1 + size_2;
-	T* merged_arr = new T[merged_size];
+	try
+	{
+		merged_arr = new T[merged_size];
+	}
+	catch(std::exception& e)
+	{
+		delete[] arr_1;
+		delete[] arr_2;
+		throw e; // maybe change it later to return enum value
+	}
+	
 	int i = 0;
 	int* index = &i;
 
@@ -1152,6 +1173,11 @@ AVLTree<T>* AVLTree<T>::mergeAVLTrees(AVLTree<T>* tree_1, AVLTree<T>* tree_2)
 
 	// turning the merged_array to AVLTree
 	AVLTree<T>* merged_tree = AVLTree<T>::arrToAVLTree(merged_arr, 0, merged_size-1);
+
+	// deleting the arrays we've allocated
+	delete[] arr_1;
+	delete[] arr_2;
+	delete[] merged_arr;
 
 	// turning the merged AVLTree to ranks tree
 	merged_tree->root->AVLToRank();
