@@ -60,10 +60,12 @@ public:
 
 		// turns AVLTree to ranks tree (setting each node's subtree_size)
 		void AVLToRank();	
-		/*
+		
+		// returns the subtree_size of a node
+		int getSubtreeSize();
+
 		// returns the node with the given rank
 		Node* select(int rank);
-		*/
 	};
 public:
 	//a pointer to the root
@@ -1218,44 +1220,44 @@ AVLTree<T>* AVLTree<T>::mergeAVLTrees(AVLTree<T>* tree_1, AVLTree<T>* tree_2)
 	merged_tree->root->AVLToRank();
 	return merged_tree;
 }
-/*
-// find the node with the given rank
-// returns nullptr if there's no node ranked "rank"
+
 template<typename T>
-AVLTree<T>::Node* AVLTree<T>::Node::select(int rank)
+int AVLTree<T>::Node::getSubtreeSize()
 {
 	if (this == nullptr)
 	{
-		return this;
+		return 0;
 	}
-	
-	if (this->getLeftChild() == nullptr && this->getRightChild() == nullptr)
-	{
-		if (rank == 1)
-		{
-			return this;
-		}
-		else
-		{
-			return nullptr;
-		}
-	}
-
-	if (this->getLeftChild()->subtree_size = rank-1)
-	{
-		return this;
-	}
-
-	if (this->getLeftChild()->subtree_size > rank-1)
-	{
-		this->getLeftChild()->select(rank);
-	}
-
-	if (this->getLeftChild()->subtree_size < rank-1)
-	{
-		this->getRightChild()->select(rank- this->getLeftChild()->subtree_size -1);
-	}
+	return this->subtree_size;
 }
-*/
+
+// find the node with the given rank
+// returns nullptr if there's no node ranked "rank"
+template<typename T>
+typename AVLTree<T>::Node* AVLTree<T>::Node::select(int rank)
+{
+	// stop condition
+	if (this->getSubtreeSize() == 0)
+	{
+		return nullptr;
+	}
+
+	if (this->getLeftChild()->getSubtreeSize() == rank-1)
+	{
+		return this;
+	}
+
+	if (this->getLeftChild()->getSubtreeSize() > rank-1)
+	{
+		return this->getLeftChild()->select(rank);
+	}
+
+	if (this->getLeftChild()->getSubtreeSize() < rank-1)
+	{
+		return this->getRightChild()->select(rank- this->getLeftChild()->getSubtreeSize() -1);
+	}
+
+	return nullptr;
+}
 
 #endif //AVL_H_
