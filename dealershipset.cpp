@@ -6,7 +6,13 @@
 DSset::DSset(int set_name):set_name(set_name){
     size = 0;
     id_tree = new AVLTree<car>();
-    ranked_tree = new AVLTree<Rankedcar>();
+    try{
+        ranked_tree = new AVLTree<Rankedcar>();
+    }
+    catch(std::exception& e)
+    {
+        delete id_tree;
+    }
 }
 
 DSset::~DSset(){

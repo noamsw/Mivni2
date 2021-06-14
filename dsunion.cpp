@@ -7,7 +7,14 @@
 DSUnion::DSUnion(){
     parents = new dynamic_array<int>;
     // sizes = new dynamic_array<int>;// removing this for now
-    sets = new dynamic_array<DSset*>;
+    try
+    {
+        sets = new dynamic_array<DSset*>;
+    }
+    catch(std::exception& e)
+    {
+        delete parents;
+    }
     num_dealerships = 0;
 }
 
