@@ -6,16 +6,31 @@ void car::sell()
     num_sales++;
 }
 // compares car by id
-bool car::operator==(const car& other)
+bool car::operator==(const car& other) const
+{
+    return car_id == other.car_id;
+}
+// compares car by id
+bool car::operator==(car& other) 
 {
     return car_id == other.car_id;
 }
 // returns the smaller car
-bool car::operator<(const car& other)
+bool car::operator<(const car& other) const
 {
     return car_id < other.car_id;
 }
-bool car::operator>(const car& other)
+bool car::operator<( car& other) 
+{
+    return car_id < other.car_id;
+}
+bool car::operator>(const car& other) const
+{
+    if (car_id == other.car_id)
+        return false;
+    return !(*this < other);
+}
+bool car::operator>( car& other) 
 {
     if (car_id == other.car_id)
         return false;

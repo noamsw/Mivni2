@@ -22,8 +22,8 @@ public:
     int num_dealerships;
 public:
     DSUnion();
-    DSUnion(const DSUnion&) = delete;
-    DSUnion operator=(const DSUnion&) = delete;
+    DSUnion(const DSUnion&);
+    DSUnion operator=(const DSUnion&);
     ~DSUnion();
     DSset* DS_makeSet();
     DSset* DS_find(int dealership_id);

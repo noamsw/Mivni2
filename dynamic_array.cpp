@@ -47,7 +47,7 @@ public:
     }
 
     // inserts an element at index
-    void insertAt(int element, int index) {
+    void insertAt(T element, int index) {
         // check that the index is with in the range
         assert(0 <= index && index < _size);
         // if the array is full, resize it

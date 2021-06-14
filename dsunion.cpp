@@ -89,7 +89,7 @@ DSset* DSUnion::DS_union(int set1, int set2){
         (*sets)[set1]->merge((*sets)[set2]);
         return (*sets)[set1];
     }
-    if( size_set2 > size_set1)
+    else
     {
         // update the parent of the smaller set
         // to be the larger set
