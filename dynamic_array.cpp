@@ -48,14 +48,21 @@ public:
 
     // inserts an element at index
     void insertAt(int element, int index) {
+        // check that the index is with in the range
         assert(0 <= index && index < _size);
+        // if the array is full, resize it
         if(_size == capacity) {
             resize();
         }
+        // move the values forward
+        // in order to make room
+        // for the inserted value
         for(int i = _size; i > index; i--) {
             array[i] = array[i-1];
         }
+        // update the size
         _size++;
+        // insert the value
         array[index] = element;
     }
     // inserts an element after the last element

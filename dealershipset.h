@@ -31,8 +31,8 @@ public:
     // other.idtree and other.ranked tree
     // will be merged into this.trees
     // other will be an invalid set, 
-    // with empty trees. 
-    DSset& merge(DSset& other);
+    // with nullptrs in tree fields. 
+    DSset& merge(DSset* other);
     // sell num_sold of type_id car
     //  updates trees
     void sell(int type_id, int num_sold);
