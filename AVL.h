@@ -61,7 +61,12 @@ public:
 		// turns AVLTree to ranks tree (setting each node's subtree_size)
 		void AVLToRank();	
 		
-    };
+		// returns the subtree_size of a node
+		int getSubtreeSize();
+
+		// returns the node with the given rank
+		Node* select(int rank);
+	};
 public:
 	//a pointer to the root
   	Node *root;
@@ -1124,7 +1129,45 @@ void AVLTree<T>::Node::AVLToRank()
 template<typename T>
 AVLTree<T>* AVLTree<T>::mergeAVLTrees(AVLTree<T>* tree_1, AVLTree<T>* tree_2)
 {
-	
+	// if both trees are empty
+	// create and return an empty tree
+	if (tree_1->root == nullptr && tree_2->root == nullptr)
+	{
+		AVLTree<T>* empty_tree = new AVLTree<T>();
+		return empty_tree;
+	}
+
+	// initializing an index for each tree
+	int i_1 = 0;
+	int* index_1 = &i_1;
+	int i_2 = 0;
+	int* index_2 = &i_2;
+
+	// if only one tree is empty, copy the other and return it
+	if (tree_1->root == nullptr)
+	{
+		int size_2 = tree_2->root->subtree_size;
+		T* arr_2 = new T[size_2];
+		tree_2->root->AVLToArr(arr_2, index_2);
+		AVLTree<T>* tree_2_copy = AVLTree<T>::arrToAVLTree(arr_2, 0, size_2-1);
+		tree_2_copy->root->AVLToRank();
+		delete[] arr_2;
+		return tree_2_copy;
+	}
+
+	if (tree_2->root == nullptr)
+	{
+		int size_1 = tree_1->root->subtree_size;
+		T* arr_1 = new T[size_1];
+		tree_1->root->AVLToArr(arr_1, index_1);
+		AVLTree<T>* tree_1_copy = AVLTree<T>::arrToAVLTree(arr_1, 0, size_1-1);
+		tree_1_copy->root->AVLToRank();
+		delete[] arr_1;
+		return tree_1_copy;
+	}
+
+	// if no tree is empty, merge them
+
 	// initializing an array for each tree
 	int size_1;
 	int size_2;
@@ -1148,13 +1191,6 @@ AVLTree<T>* AVLTree<T>::mergeAVLTrees(AVLTree<T>* tree_1, AVLTree<T>* tree_2)
 		delete[] arr_1;
 		throw e; // maybe change it later to return enum value
 	}
-	
-	
-	// initializing an index for each tree
-	int i_1 = 0;
-	int* index_1 = &i_1;
-	int i_2 = 0;
-	int* index_2 = &i_2;
 
 	// turning each tree to array
 	tree_1->root->AVLToArr(arr_1, index_1);
@@ -1193,6 +1229,43 @@ AVLTree<T>* AVLTree<T>::mergeAVLTrees(AVLTree<T>* tree_1, AVLTree<T>* tree_2)
 	return merged_tree;
 }
 
+template<typename T>
+int AVLTree<T>::Node::getSubtreeSize()
+{
+	if (this == nullptr)
+	{
+		return 0;
+	}
+	return this->subtree_size;
+}
 
+// find the node with the given rank
+// returns nullptr if there's no node ranked "rank"
+template<typename T>
+typename AVLTree<T>::Node* AVLTree<T>::Node::select(int rank)
+{
+	// stop condition
+	if (this->getSubtreeSize() == 0)
+	{
+		return nullptr;
+	}
+
+	if (this->getLeftChild()->getSubtreeSize() == rank-1)
+	{
+		return this;
+	}
+
+	if (this->getLeftChild()->getSubtreeSize() > rank-1)
+	{
+		return this->getLeftChild()->select(rank);
+	}
+
+	if (this->getLeftChild()->getSubtreeSize() < rank-1)
+	{
+		return this->getRightChild()->select(rank- this->getLeftChild()->getSubtreeSize() -1);
+	}
+
+	return nullptr;
+}
 
 #endif //AVL_H_
