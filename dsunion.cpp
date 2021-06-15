@@ -22,11 +22,11 @@ DSUnion::~DSUnion(){
     delete parents;
     // delete sizes; // removing this for now
     // it is our responibility to erase the pointers
-    for(int i =0; i++; i<num_dealerships)
-    {
-        delete (*sets)[i];
-        (*sets)[i] = nullptr;
-    }
+    for(int i = 0; i < num_dealerships; i++)
+        {
+            delete (*sets)[i];
+            (*sets)[i] = nullptr;
+        }     
     delete sets;
 }
 

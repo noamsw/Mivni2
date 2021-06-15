@@ -20,6 +20,7 @@ public:
     bool operator==( Rankedcar& other);
     bool operator<( Rankedcar& other);
     bool operator>( Rankedcar& other);
+    friend std::ostream& operator<<(std::ostream& os, const Rankedcar& car);
 };
 
 

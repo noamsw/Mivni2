@@ -798,8 +798,8 @@ void AVLTree<T>::rotateRight(Node *n) {
 		p->setRightChild(temp);
 
   // after the rotation, update node's subtree_size
-  n->subtree_size = n->getLeftChild()->subtree_size + n->getRightChild()->subtree_size + 1;
-  temp->subtree_size = temp->getLeftChild()->subtree_size + temp->getRightChild()->subtree_size + 1;
+  n->updateRotationSize();
+  temp->updateRotationSize();
 }
 
 // Set the root. Change the tree root to the node
@@ -857,7 +857,6 @@ void AVLTree<T>::print() {
 	  std::cout << std::endl;
 	} // for
   } 
-  std::cout << std::endl;
 } // print
 
 // --------------------------------------------------
@@ -1210,9 +1209,7 @@ AVLTree<T>* AVLTree<T>::mergeAVLTrees(AVLTree<T>* tree_1, AVLTree<T>* tree_2)
 		throw e; // maybe change it later to return enum value
 	}
 	
-	int i = 0;
-	int* index = &i;
-
+	
 	// merging arr_1 and arr_2 to merged_arr
 	mergeArrays(arr_1, size_1, arr_2, size_2, merged_arr, merged_size);
 
