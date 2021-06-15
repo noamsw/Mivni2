@@ -39,6 +39,6 @@ bool car::operator>( car& other)
 
 std::ostream& operator<<(std::ostream& os, const car& car)
 {
-    os << car.car_id << "." << car.num_sales << std::endl;
+    os << car.car_id << "." << car.num_sales;
     return os;
 }

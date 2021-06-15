@@ -55,6 +55,6 @@ bool Rankedcar::operator>( Rankedcar& other){
 
 std::ostream& operator<<(std::ostream& os, const Rankedcar& car)
 {
-    os << car.car_id << "." << car.num_sales << std::endl;
+    os << car.car_id << "." << car.num_sales;
     return os;
 }
