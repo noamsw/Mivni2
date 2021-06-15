@@ -29,3 +29,15 @@ bool DSManager::UniteAgencies(int agency_id1, int agency_id2)
     DS_union(set1, set2);
     return true;
 }
+    // returns 1 if the car exists
+    // returns -1 if the agency does not exist
+    // or if the car does not exist in this agency
+int DSManager::GetIthSoldType(int agency_id, int i, int* res)
+{
+    if (agency_id >= num_dealerships)
+    {
+        return -1;
+    }
+
+
+}
