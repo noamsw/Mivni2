@@ -798,8 +798,8 @@ void AVLTree<T>::rotateRight(Node *n) {
 		p->setRightChild(temp);
 
   // after the rotation, update node's subtree_size
-  n->subtree_size = n->getLeftChild()->subtree_size + n->getRightChild()->subtree_size + 1;
-  temp->subtree_size = temp->getLeftChild()->subtree_size + temp->getRightChild()->subtree_size + 1;
+  n->updateRotationSize();
+  temp->updateRotationSize();
 }
 
 // Set the root. Change the tree root to the node

@@ -63,6 +63,6 @@ void DSset::sell(int type_id, int num_sold){
 
     // returns the "i"th sold car
     // from 0 till the end
-    int DSset::getthsold(int i){
+    int DSset::getithsold(int i){
         return 0;
     }

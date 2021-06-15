@@ -38,7 +38,7 @@ public:
     void sell(int type_id, int num_sold);
     // returns the "i"th sold car
     // from 0 till the end
-    int getthsold(int i);
+    int getithsold(int i);
 };
 
 

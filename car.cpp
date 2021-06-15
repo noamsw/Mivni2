@@ -36,3 +36,9 @@ bool car::operator>( car& other)
         return false;
     return !(*this < other);
 }
+
+std::ostream& operator<<(std::ostream& os, const car& car)
+{
+    os << car.car_id << "." << car.num_sales << std::endl;
+    return os;
+}

@@ -7,10 +7,10 @@
 //for a dealership
 class DSUnion{
 public:
-    //the cardealerships are simply ints
+    //the agencies are simply ints
     // as such the reverse tree will be imlemented using two arrays
     // one aray for sizes, one for parents. 
-    // if the dealership is the parent
+    // if the agency is the parent
     // the parent will be itself
     // the name of the set will be the name of the parent dealership 
     dynamic_array<int>* parents;

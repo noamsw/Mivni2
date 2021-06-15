@@ -19,6 +19,7 @@ public:
     bool operator==(car& other);
     bool operator<(car& other);
     bool operator>(car& other);
+    friend std::ostream& operator<<(std::ostream& os, const car& car);
 };
 
 // commits check
