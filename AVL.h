@@ -19,7 +19,7 @@ public:
         Node *parent;
 		//height from bottom of tree
         int height;
-		// the size of the node's subtree, node included
+		// the size of the node's left subtree, node included
 		int subtree_size;
 
     	//default constructor
@@ -857,7 +857,6 @@ void AVLTree<T>::print() {
 	  std::cout << std::endl;
 	} // for
   } 
-  std::cout << std::endl;
 } // print
 
 // --------------------------------------------------
@@ -1210,9 +1209,7 @@ AVLTree<T>* AVLTree<T>::mergeAVLTrees(AVLTree<T>* tree_1, AVLTree<T>* tree_2)
 		throw e; // maybe change it later to return enum value
 	}
 	
-	int i = 0;
-	int* index = &i;
-
+	
 	// merging arr_1 and arr_2 to merged_arr
 	mergeArrays(arr_1, size_1, arr_2, size_2, merged_arr, merged_size);
 
