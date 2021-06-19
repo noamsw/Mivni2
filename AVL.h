@@ -655,7 +655,6 @@ bool AVLTree<T>::remove(const T& t) {
 				{
 					replacement = toBeRemoved->getLeftChild();
 					replacement->setRightChild(toBeRemoved->getRightChild());
-					toBeRemoved->getRightChild()->parent =replacement;
 					replacement->subtree_size += replacement->getRightChild()->getSubtreeSize();
 					temp_node = replacement;
 				}
@@ -674,7 +673,6 @@ bool AVLTree<T>::remove(const T& t) {
 						replacement = replacement->getRightChild();
 					replacement_parent = replacement->getParent();
 					replacement_parent->setRightChild(replacement->getLeftChild());
-					replacement->getLeftChild()->parent = replacement_parent;
 
 					Node* iterator = replacement_parent;
 					while (iterator != toBeRemoved)
@@ -686,8 +684,6 @@ bool AVLTree<T>::remove(const T& t) {
 					temp_node = replacement_parent;
 					replacement->setLeftChild(toBeRemoved->getLeftChild());
 					replacement->setRightChild(toBeRemoved->getRightChild());
-					toBeRemoved->getLeftChild()->parent = replacement;
-					toBeRemoved->getRightChild()->parent = replacement;
 					replacement->subtree_size = toBeRemoved->getLeftChild()->getSubtreeSize() + toBeRemoved->getRightChild()->getSubtreeSize();
 				}
 			} 
@@ -698,7 +694,6 @@ bool AVLTree<T>::remove(const T& t) {
 			{
 				replacement = toBeRemoved->getRightChild();
 				replacement->setLeftChild(toBeRemoved->getLeftChild());
-				toBeRemoved->getLeftChild()->parent = replacement;
 				replacement->subtree_size += toBeRemoved->getLeftChild()->getSubtreeSize();
 				temp_node = replacement;
 			}
@@ -717,7 +712,6 @@ bool AVLTree<T>::remove(const T& t) {
 					replacement = replacement->getLeftChild();
 				replacement_parent = replacement->getParent();
 				replacement_parent->setLeftChild(replacement->getRightChild());
-				replacement->getRightChild()->parent = replacement;
 
 				Node* iterator = replacement_parent;
 				while (iterator != toBeRemoved)
@@ -729,8 +723,6 @@ bool AVLTree<T>::remove(const T& t) {
 				temp_node = replacement_parent;
 				replacement->setLeftChild(toBeRemoved->getLeftChild());
 				replacement->setRightChild(toBeRemoved->getRightChild());
-				toBeRemoved->getLeftChild()->parent = replacement;
-				toBeRemoved->getRightChild()->parent = replacement;
 			}
 			// Fix the parent to point to the new root.
 			// If there isn't a parent, update the actual
