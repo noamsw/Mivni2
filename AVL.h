@@ -515,7 +515,7 @@ bool AVLTree<T>::remove(const T& t) {
 				if (p == nullptr) {
 					setRoot(nullptr);
 					delete toBeRemoved;
-          toBeRemoved = nullptr;
+          			toBeRemoved = nullptr;
 					lowest = nullptr;
 					highest = nullptr;
 				}
@@ -574,12 +574,12 @@ bool AVLTree<T>::remove(const T& t) {
 				// parent's height, and rebalance the tree.
 				else {
 					if (side == left)
-          {
-            // in this case, the lowest node is now our right son
-            if(lowest == toBeRemoved)
-              lowest = toBeRemoved->getRightChild();
-            p->setLeftChild(toBeRemoved->getRightChild());
-          }
+					{
+						// in this case, the lowest node is now our right son
+						if(lowest == toBeRemoved)
+						lowest = toBeRemoved->getRightChild();
+						p->setLeftChild(toBeRemoved->getRightChild());
+					}
 					else
 						p->setRightChild(toBeRemoved->getRightChild());
 
