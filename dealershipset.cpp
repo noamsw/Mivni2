@@ -60,9 +60,18 @@ void DSset::sell(int type_id, int num_sold){
     return;
 }
 
-
-    // returns the "i"th sold car
-    // from 0 till the end
-    int DSset::getithsold(int i){
-        return 0;
+    // returns 1 if the car exists
+    // else returns -1
+    int DSset::getIthsold(int i, int* res)
+    {
+        // lowest key is 0 and not 1
+        AVLTree<Rankedcar>::Node* i_th_car = this->ranked_tree->root->select(i+1);
+        // if the car does not exist
+        if (i_th_car == nullptr)
+        {
+            return -1;
+        }
+        // else, the car exist
+        *res = i_th_car->data.car_id;
+        return 1; 
     }

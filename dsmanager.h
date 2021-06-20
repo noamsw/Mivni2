@@ -12,9 +12,9 @@ public:
     bool SellCar(int agency_id, int type_id, int num_sales);
     // unites two agencies
     bool UniteAgencies(int agency_id1, int agency_id2);
-    // returns the "i"th sold car,
-    // 0 being least sold
-    int GetIthSoldType(int agency_id, int i);
+    // returns 1 if the car exists
+    // else returns -1
+    int GetIthSoldType(int agency_id, int i, int* res);
 };
 
 
