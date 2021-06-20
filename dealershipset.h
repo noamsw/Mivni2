@@ -36,9 +36,9 @@ public:
     // sell num_sold of type_id car
     //  updates trees
     void sell(int type_id, int num_sold);
-    // returns the "i"th sold car
-    // from 0 till the end
-    int getithsold(int i);
+    // returns 1 if the car exists
+    // else returns -1
+    int getIthsold(int i, int* res);
 };
 
 

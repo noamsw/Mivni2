@@ -19,7 +19,7 @@ public:
         Node *parent;
 		//height from bottom of tree
         int height;
-		// the size of the node's left subtree, node included
+		// the size of the node's subtree, node included
 		int subtree_size;
 
     	//default constructor
@@ -505,184 +505,198 @@ bool AVLTree<T>::remove(const T& t) {
 	// If the node to be removed doesn't have a left
 	// subtree, check it's right subtree to figure
 	// out our next move.
-	if (toBeRemoved->getLeftChild() == nullptr){
-			// If we don't have any subtrees, we are the
-			// leaf so our parent doesn't need us.
-			if (toBeRemoved->getRightChild() == nullptr) {
-				// If we don't have a parent, the tree is now
-				// empty so change the root to null and delete
-				// our node.
-				if (p == nullptr) {
-					setRoot(nullptr);
-					delete toBeRemoved;
-          toBeRemoved = nullptr;
-					lowest = nullptr;
-					highest = nullptr;
-				}
-				// Otherwise, change the parent so it doesn't
-				// point to us, delete ourself, update the
-				// parent's height, and rebalance the tree. 
-				//if there is a node in the tree there is a lowest and highest value
-				//in order to be the highest or lowest value we must be a leaf
-				//check if we are the highest or lowest value
-				//update as needed
-				else {
-					if (side == left){
-						if(toBeRemoved->getData() == lowest->getData()){
-							lowest = lowest->getParent();
-						}
-						p->setLeftChild(nullptr);
-					}
-					else{
-						if(toBeRemoved->getData() == highest->getData()){
-							highest = highest->getParent();
-						}
-						p->setRightChild(nullptr);
-					}
-					// update the subtree_size in the node's path
-					Node* iter = toBeRemoved;
-					while(iter->getParent())
-					{
-						iter->getParent()->updateRemoveSize();
-						iter = iter->getParent();
-					}
-					delete toBeRemoved;
-          			toBeRemoved = nullptr;
-					p->updateHeight();
-					balanceAtNode(p);
-				} 
+	if (toBeRemoved->getLeftChild() == nullptr)
+	{
+		// If we don't have any subtrees, we are the
+		// leaf so our parent doesn't need us.
+		if (toBeRemoved->getRightChild() == nullptr) 
+		{
+			// If we don't have a parent, the tree is now
+			// empty so change the root to null and delete
+			// our node.
+			if (p == nullptr)
+			{
+				setRoot(nullptr);
+				delete toBeRemoved;
+      			toBeRemoved = nullptr;
+				lowest = nullptr;
+				highest = nullptr;
 			}
-			// Otherwise, there is a right subtree so use
-			// it to replace ourself.
-			else {
-				// If we don't have a parent, the tree is now
-				// the right subtree and delete our node.
-				if (p == nullptr) {
-					//deal with the case where the lowest value is the parent
-					lowest = toBeRemoved->getRightChild();
-					setRoot(toBeRemoved->getRightChild());
-					Node* iter = toBeRemoved;
-					while(iter->getParent())
+			// Otherwise, change the parent so it doesn't
+			// point to us, delete ourself, update the
+			// parent's height, and rebalance the tree. 
+			//if there is a node in the tree there is a lowest and highest value
+			//in order to be the highest or lowest value we must be a leaf
+			//check if we are the highest or lowest value
+			//update as needed
+			else 
+			{
+				if (side == left)
+				{
+					if(toBeRemoved->getData() == lowest->getData())
 					{
-						iter->getParent()->updateRemoveSize();
-						iter = iter->getParent();
+						lowest = lowest->getParent();
 					}
-					delete toBeRemoved;
+					p->setLeftChild(nullptr);
 				}
-				// Otherwise, change the parent so it doesn't
-				// point to us, delete ourself, update the
-				// parent's height, and rebalance the tree.
-				else {
-					if (side == left)
-          {
-            // in this case, the lowest node is now our right son
-            if(lowest == toBeRemoved)
-              lowest = toBeRemoved->getRightChild();
-            p->setLeftChild(toBeRemoved->getRightChild());
-          }
-					else
-						p->setRightChild(toBeRemoved->getRightChild());
-
-					Node* iter = toBeRemoved;
-					while(iter->getParent())
+				else
+				{
+					if(toBeRemoved->getData() == highest->getData())
 					{
-						iter->getParent()->updateRemoveSize();
-						iter = iter->getParent();
+						highest = highest->getParent();
 					}
-					delete toBeRemoved;
-					p->updateHeight();
-					balanceAtNode(p);
-			  } 
+					p->setRightChild(nullptr);
+				}
+				// update the subtree_size in the node's path
+				Node* iter = toBeRemoved;
+				while(iter->getParent())
+				{
+					iter->getParent()->updateRemoveSize();
+					iter = iter->getParent();
+				}
+				delete toBeRemoved;
+      			toBeRemoved = nullptr;
+				p->updateHeight();
+				balanceAtNode(p);
 			} 
 		}
+		// Otherwise, there is a right subtree so use
+		// it to replace ourself.
+		else 
+		{
+			// If we don't have a parent, the tree is now
+			// the right subtree and delete our node.
+			if (p == nullptr) 
+			{
+				//deal with the case where the lowest value is the parent
+				lowest = toBeRemoved->getRightChild();
+				setRoot(toBeRemoved->getRightChild());
+			}
+			// Otherwise, change the parent so it doesn't
+			// point to us, delete ourself, update the
+			// parent's height, and rebalance the tree.
+			else 
+			{
+				if (side == left)
+				{
+					// in this case, the lowest node is now our right son
+					if(lowest == toBeRemoved)
+					lowest = toBeRemoved->getRightChild();
+					p->setLeftChild(toBeRemoved->getRightChild());
+				}
+				else
+					p->setRightChild(toBeRemoved->getRightChild());
+	
+				Node* iter = toBeRemoved;
+				while(iter->getParent())
+				{
+					iter->getParent()->updateRemoveSize();
+					iter = iter->getParent();
+				}
+				delete toBeRemoved;
+				p->updateHeight();
+				balanceAtNode(p);
+			} 
+		} 
+	}
   	// Otherwise, we have a left subtree so check the
 	// right one of the node being removed to decide
 	// what is next. If there isn't a right subtree,
 	// the left one will replace ourself.
-	else 
-			if (toBeRemoved->getRightChild() ==nullptr) {
-				// If we don't have a parent, the tree is now
-				// the left subtree and delete our node.
-				if (p == nullptr) {
-					highest = toBeRemoved->getLeftChild();
-					setRoot(toBeRemoved->getLeftChild());
-					Node* iter = toBeRemoved;
-					while(iter->getParent())
-					{
-						iter->getParent()->updateRemoveSize();
-						iter = iter->getParent();
-					}
-					delete toBeRemoved;
-          			toBeRemoved = nullptr;
-				}
-				// Otherwise, change the parent so it doesn't
-				// point to us, delete ourself, update the
-				// parent's height, and rebalance the tree.
-				else {
-					if(side == left)
-          {
-						p->setLeftChild(toBeRemoved->getLeftChild());
-          }
-					else
-          {
-            // in this case our left son is now the highest
-            if(highest == toBeRemoved)
-              highest = toBeRemoved->getLeftChild();
-						p->setRightChild(toBeRemoved->getLeftChild());
-          }
-					p->updateHeight();
-					balanceAtNode(p);
-				}
+	else
+	{ 
+		if (toBeRemoved->getRightChild() ==nullptr) 
+		{
+			// If we don't have a parent, the tree is now
+			// the left subtree and delete our node.
+			if (p == nullptr) 
+			{
+				highest = toBeRemoved->getLeftChild();
+				setRoot(toBeRemoved->getLeftChild());
+				delete toBeRemoved;
+        		toBeRemoved = nullptr;
 			}
+			// Otherwise, change the parent so it doesn't
+			// point to us, delete ourself, update the
+			// parent's height, and rebalance the tree.
+			else 
+			{
+				if(side == left)
+        		{
+					p->setLeftChild(toBeRemoved->getLeftChild());
+        		}
+				else
+				{
+					// in this case our left son is now the highest
+					if(highest == toBeRemoved)
+						highest = toBeRemoved->getLeftChild();
+					p->setRightChild(toBeRemoved->getLeftChild());
+				}
+				p->updateHeight();
+				balanceAtNode(p);
+			}
+		}
 		// Otherwise, the node to remove has both subtrees
 		// so decide the best method to remove it.
-		else {
-		// Check the balance to see which way to go.
-		// If the left side is deeper, modify it.
-		Node *replacement;
-		Node *replacement_parent;
-		Node *temp_node;
-		int bal = toBeRemoved->getBalance();
-		if (bal > 0) {
-			// If the right subtree of the node's
-			// left subtree is empty, we can move the
-			// node's right subtree there.
-			if (toBeRemoved->getLeftChild()->
-				getRightChild() == nullptr) {
-				replacement = toBeRemoved->getLeftChild();
-				replacement->setRightChild(
-					toBeRemoved->getRightChild());
-				temp_node = replacement;
+		else 
+		{
+			// If the left side is deeper, modify it.
+			// Check the balance to see which way to go.
+			Node *replacement;
+			Node *replacement_parent;
+			Node *temp_node;
+			int bal = toBeRemoved->getBalance();
+			if (bal > 0) 
+			{
+				// If the right subtree of the node's
+				// left subtree is empty, we can move the
+				// node's right subtree there.
+				if (toBeRemoved->getLeftChild()->getRightChild() == nullptr) 
+				{
+					replacement = toBeRemoved->getLeftChild();
+					replacement->setRightChild(toBeRemoved->getRightChild());
+					replacement->subtree_size += replacement->getRightChild()->getSubtreeSize();
+					temp_node = replacement;
+				}
+				// Otherwise, find the most right child
+				// of our node's left subtree and it's parent. 
+				// This is our replacement. Make it's
+				// parent point to it's left child instead
+				// of itself. It is now free to replace the
+				// deleted node. Copy both of the deleted
+				// nodes subtrees into the replacement leaving
+				// fixing up the parent below.
+				else 
+				{
+					replacement = toBeRemoved->getLeftChild()->getRightChild();
+					while (replacement->getRightChild() != nullptr)
+						replacement = replacement->getRightChild();
+					replacement_parent = replacement->getParent();
+					replacement_parent->setRightChild(replacement->getLeftChild());
 
-			// Otherwise, find the right most empty subtree
-			// of our node's left subtree and it's
-			// parent. This is our replacement. Make it's
-			// parent point to it's left child instead
-			// of itself. It is now free to replace the
-			// deleted node. Copy both of the deleted
-			// nodes subtrees into the replacement leaving
-			// fixing up the parent below.
-		}
-		else {
-			replacement = toBeRemoved->
-				getLeftChild()->getRightChild();
-			while (replacement->getRightChild() !=nullptr)
-				replacement = replacement->getRightChild();
-			replacement_parent = replacement->getParent();
-			replacement_parent->setRightChild(replacement->getLeftChild());
-			temp_node = replacement_parent;
-			replacement->setLeftChild(toBeRemoved->getLeftChild());
-			replacement->setRightChild(toBeRemoved->getRightChild());
-		}
-		// Otherwise, we are going to modify the right
-		// side so, if the left subtree of the node's
-		// right subtree is empty, we can move the
-		// node's left subtree there.
-		} 
-		else if (toBeRemoved->getRightChild()->getLeftChild() == nullptr) {
-			replacement = toBeRemoved->getRightChild();
-			replacement->setLeftChild(toBeRemoved->getLeftChild());
-			temp_node = replacement;
+					Node* iterator = replacement_parent;
+					while (iterator != toBeRemoved)
+					{
+						iterator->subtree_size -= 1;
+						iterator = iterator->getParent();
+					}
+					
+					temp_node = replacement_parent;
+					replacement->setLeftChild(toBeRemoved->getLeftChild());
+					replacement->setRightChild(toBeRemoved->getRightChild());
+					replacement->subtree_size = toBeRemoved->getLeftChild()->getSubtreeSize() + toBeRemoved->getRightChild()->getSubtreeSize();
+				}
+			} 
+			// Otherwise, we are going to modify the right side
+			// if the left subtree of the node's right subtree
+			// is empty, we can move the node's left subtree there.
+			else if (toBeRemoved->getRightChild()->getLeftChild() == nullptr) 
+			{
+				replacement = toBeRemoved->getRightChild();
+				replacement->setLeftChild(toBeRemoved->getLeftChild());
+				replacement->subtree_size += toBeRemoved->getLeftChild()->getSubtreeSize();
+				temp_node = replacement;
+			}
 			// Otherwise, find the left most empty subtree
 			// of our node's right subtree and it's
 			// parent. This is our replacement. Make it's
@@ -691,38 +705,51 @@ bool AVLTree<T>::remove(const T& t) {
 			// deleted node. Copy both of the deleted
 			// nodes subtrees into the replacement leaving
 			// fixing up the parent below.
-		} 
-		else {
-			replacement = toBeRemoved->getRightChild()->getLeftChild();
-			while (replacement->getLeftChild() !=nullptr)
-				replacement = replacement->getLeftChild();
-			replacement_parent = replacement->getParent();
-			replacement_parent->setLeftChild(replacement->getRightChild());
-			temp_node = replacement_parent;
-			replacement->setLeftChild(toBeRemoved->getLeftChild());
-			replacement->setRightChild(toBeRemoved->getRightChild());
+			else 
+			{
+				replacement = toBeRemoved->getRightChild()->getLeftChild();
+				while (replacement->getLeftChild() !=nullptr)
+					replacement = replacement->getLeftChild();
+				replacement_parent = replacement->getParent();
+				replacement_parent->setLeftChild(replacement->getRightChild());
+
+				Node* iterator = replacement_parent;
+				while (iterator != toBeRemoved)
+				{
+					iterator->subtree_size -= 1;
+					iterator = iterator->getParent();
+				}
+
+				temp_node = replacement_parent;
+				replacement->setLeftChild(toBeRemoved->getLeftChild());
+				replacement->setRightChild(toBeRemoved->getRightChild());
+			}
+			// Fix the parent to point to the new root.
+			// If there isn't a parent, update the actual
+			// tree root. Otherwise, there is a parent so
+			// if we were the left subtree, update it,
+			// otherwise, the right. In all cases, delete
+			// the node and rebalance the tree.
+			if (p == nullptr)
+				setRoot(replacement);
+			else if (side == left)
+					p->setLeftChild(replacement);
+				else
+					p->setRightChild(replacement);
+			
+			Node* iter = toBeRemoved;
+			if (iter != nullptr)
+			{
+				while(iter->getParent())
+				{
+					iter->getParent()->updateRemoveSize();
+					iter = iter->getParent();
+				}
+			}
+			delete toBeRemoved;
+    		toBeRemoved = nullptr;
+			balanceAtNode(temp_node);
 		}
-		// Fix the parent to point to the new root.
-		// If there isn't a parent, update the actual
-		// tree root. Otherwise, there is a parent so
-		// if we were the left subtree, update it,
-		// otherwise, the right. In all cases, delete
-		// the node and rebalance the tree.
-		if (p == nullptr)
-			setRoot(replacement);
-		else if (side == left)
-				p->setLeftChild(replacement);
-			else
-				p->setRightChild(replacement);
-		Node* iter = toBeRemoved;
-		while(iter->getParent())
-		{
-			iter->getParent()->updateRemoveSize();
-			iter = iter->getParent();
-		}
-		delete toBeRemoved;
-    	toBeRemoved = nullptr;
-		balanceAtNode(temp_node);
 	}
 	return true;
 }
