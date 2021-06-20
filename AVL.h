@@ -507,52 +507,6 @@ bool AVLTree<T>::remove(const T& t) {
 	// If the node to be removed doesn't have a left
 	// subtree, check it's right subtree to figure
 	// out our next move.
-	if (toBeRemoved->getLeftChild() == nullptr){
-			// If we don't have any subtrees, we are the
-			// leaf so our parent doesn't need us.
-			if (toBeRemoved->getRightChild() == nullptr) {
-				// If we don't have a parent, the tree is now
-				// empty so change the root to null and delete
-				// our node.
-				if (p == nullptr) {
-					setRoot(nullptr);
-					delete toBeRemoved;
-          			toBeRemoved = nullptr;
-					lowest = nullptr;
-					highest = nullptr;
-				}
-				// Otherwise, change the parent so it doesn't
-				// point to us, delete ourself, update the
-				// parent's height, and rebalance the tree. 
-				//if there is a node in the tree there is a lowest and highest value
-				//in order to be the highest or lowest value we must be a leaf
-				//check if we are the highest or lowest value
-				//update as needed
-				else {
-					if (side == left){
-						if(toBeRemoved->getData() == lowest->getData()){
-							lowest = lowest->getParent();
-						}
-						p->setLeftChild(nullptr);
-					}
-					else{
-						if(toBeRemoved->getData() == highest->getData()){
-							highest = highest->getParent();
-						}
-						p->setRightChild(nullptr);
-					}
-					// update the subtree_size in the node's path
-					Node* iter = toBeRemoved;
-					while(iter->getParent())
-					{
-						iter->getParent()->updateRemoveSize();
-						iter = iter->getParent();
-					}
-					delete toBeRemoved;
-          			toBeRemoved = nullptr;
-					p->updateHeight();
-					balanceAtNode(p);
-				} 
 	if (toBeRemoved->getLeftChild() == nullptr)
 	{
 		// If we don't have any subtrees, we are the
@@ -587,22 +541,6 @@ bool AVLTree<T>::remove(const T& t) {
 					}
 					p->setLeftChild(nullptr);
 				}
-				// Otherwise, change the parent so it doesn't
-				// point to us, delete ourself, update the
-				// parent's height, and rebalance the tree.
-				else {
-					if (side == left)
-					{
-						// in this case, the lowest node is now our right son
-						if(lowest == toBeRemoved)
-						lowest = toBeRemoved->getRightChild();
-						p->setLeftChild(toBeRemoved->getRightChild());
-					}
-					else
-						p->setRightChild(toBeRemoved->getRightChild());
-
-					Node* iter = toBeRemoved;
-					while(iter->getParent())
 				else
 				{
 					if(toBeRemoved->getData() == highest->getData())
