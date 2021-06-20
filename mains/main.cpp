@@ -17,6 +17,8 @@ int main(){
     union1->DS_find(2)->sell(1,2);
     union1->DS_find(2)->sell(3,2);
     union1->DS_find(0)->sell(9,2);
+    union1->DS_find(2)->sell(1,2);
+    union1->DS_find(2)->sell(10,4);
     std::cout << "id tree of 1:" << std::endl;
     union1->DS_find(1)->id_tree->print();
     std::cout << "ranked tree of 1:" << std::endl;

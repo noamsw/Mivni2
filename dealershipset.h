@@ -3,7 +3,7 @@
 
 #include "dynamic_array.cpp"
 #include <iostream>
-#include "AVL.h"
+#include "avl.h"
 #include "car.h"
 #include "rankedcar.h"
 

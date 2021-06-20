@@ -31,8 +31,6 @@ DSUnion::~DSUnion(){
 }
 
 // adds a new agency to DSunion
-// it will be the responsibilty if the DSManger 
-// to make sure to add agencies in the correct order
 DSset* DSUnion::DS_makeSet(){
     // inserts the new agency name into the parents array
     parents->append(num_dealerships);
