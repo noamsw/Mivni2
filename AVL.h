@@ -697,7 +697,7 @@ bool AVLTree<T>::remove(const T& t) {
 					temp_node = replacement_parent;
 					replacement->setLeftChild(toBeRemoved->getLeftChild());
 					replacement->setRightChild(toBeRemoved->getRightChild());
-					replacement->subtree_size = toBeRemoved->getLeftChild()->getSubtreeSize() + toBeRemoved->getRightChild()->getSubtreeSize();
+					replacement->subtree_size = toBeRemoved->getLeftChild()->getSubtreeSize() + toBeRemoved->getRightChild()->getSubtreeSize() + 1;
 				}
 			} 
 			// Otherwise, we are going to modify the right side
@@ -736,6 +736,7 @@ bool AVLTree<T>::remove(const T& t) {
 				temp_node = replacement_parent;
 				replacement->setLeftChild(toBeRemoved->getLeftChild());
 				replacement->setRightChild(toBeRemoved->getRightChild());
+				replacement->subtree_size = toBeRemoved->getLeftChild()->getSubtreeSize() + toBeRemoved->getRightChild()->getSubtreeSize() +1;
 			}
 			// Fix the parent to point to the new root.
 			// If there isn't a parent, update the actual
