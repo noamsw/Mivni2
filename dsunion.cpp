@@ -22,10 +22,10 @@ DSUnion::~DSUnion(){
     delete parents;
     // delete sizes; // removing this for now
     // it is our responibility to erase the pointers
-    for(int i = 0; i < num_dealerships; i++)
+    for(int i = 0; i < num_dealerships ; i++)
         {
-            delete (*sets)[i];
-            (*sets)[i] = nullptr;
+            if((*sets)[i])
+                delete (*sets)[i];
         }     
     delete sets;
 }
@@ -50,7 +50,8 @@ DSset* DSUnion::DS_makeSet(){
 // of the ds
 DSset* DSUnion::DS_find(int dealership_id){
     // assert that we are in the range of the sets
-    assert ( dealership_id >= 0 && dealership_id < parents->getsSize());
+    if( dealership_id < 0 && dealership_id >= parents->getsSize())
+        return nullptr;
     int parent_dealership = dealership_id; 
     // find the parent dealership
     // going over the array until reaching a dealership
@@ -85,6 +86,7 @@ DSset* DSUnion::DS_union(int set1, int set2){
         (*parents)[set2] = set1;
         // merge set2 into set1
         (*sets)[set1]->merge((*sets)[set2]);
+        (*sets)[set2]=nullptr;
         return (*sets)[set1];
     }
     else
@@ -94,6 +96,7 @@ DSset* DSUnion::DS_union(int set1, int set2){
         (*parents)[set1] = set2;
         // merge set1 into set2
         (*sets)[set2]->merge((*sets)[set1]);
+        (*sets)[set1]=nullptr;
         return (*sets)[set2];
     }
 }
