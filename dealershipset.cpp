@@ -18,23 +18,24 @@ DSset::DSset(int set_name):set_name(set_name){
 DSset::~DSset(){
    delete ranked_tree;
    delete id_tree; 
+//    std::cout << "destroyed  set: " << set_name <<std::endl;
 }
 
+// merges other into this
+// other is deleted after merge
 DSset& DSset::merge(DSset* other){
     size += other->size;
     // merge the trees from each set into two new trees
     AVLTree<Rankedcar>* new_rankedtree= AVLTree<Rankedcar>::mergeAVLTrees(this->ranked_tree, other->ranked_tree);
     AVLTree<car>* new_idtree= AVLTree<car>::mergeAVLTrees(this->id_tree, other->id_tree);
     // delete the tress in the old set and set them to nullptrs
-    delete this->ranked_tree;
-    delete this->id_tree;
-    delete other->ranked_tree;
-    delete other->id_tree;
-    other->ranked_tree = nullptr;
-    other->id_tree = nullptr;
+    delete ranked_tree;
+    delete id_tree;
+    delete other;
+    other = nullptr;
     // update the sets trees to the new trees
-    this->ranked_tree = new_rankedtree;
-    this->id_tree = new_idtree;
+    ranked_tree = new_rankedtree;
+    id_tree = new_idtree;
     return *this;
 }
 
