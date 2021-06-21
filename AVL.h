@@ -29,7 +29,7 @@ public:
 		// Constructor initializing the data.
 		Node(T t);
 		//destructor
-		virtual ~Node() = default; //not sure why this ruins things
+		virtual ~Node(); //not sure why this ruins things
 		// Calculate the balance point.
 		int getBalance();
 		// Get the actual data.
@@ -142,6 +142,14 @@ AVLTree<T>::Node::Node(T val) {
   left_child = nullptr;
   right_child = nullptr;
 }
+
+// paramterized dtor.
+template<typename T>
+AVLTree<T>::Node::~Node() {
+//   std::cout << "node destroyed" << data << std::endl;
+}
+
+
 // Calculate the balance factoP: left.height-r.height
 template<typename T>
 int AVLTree<T>::Node::getBalance() {
@@ -208,7 +216,7 @@ typename AVLTree<T>::Node *AVLTree<T>::Node::getParent() {
 // Remove the node's parent.
 template<typename T>
 void AVLTree<T>::Node::removeParent() {
-  parent = nullptr;
+	parent = nullptr;
 }
 
 // Set the left subtree.
@@ -355,6 +363,7 @@ AVLTree<T>::~AVLTree(){
 	{
 		remove(root->getData());
 	}
+	// std::cout << "destroyed avl tree" <<std::endl;
 }
 
 // Balance the subtree. balancing the tree cannot change wich node is of highest or lowest value
@@ -573,6 +582,8 @@ bool AVLTree<T>::remove(const T& t) {
 				//deal with the case where the lowest value is the parent
 				lowest = toBeRemoved->getRightChild();
 				setRoot(toBeRemoved->getRightChild());
+				delete toBeRemoved;
+      			toBeRemoved = nullptr;
 			}
 			// Otherwise, change the parent so it doesn't
 			// point to us, delete ourself, update the
@@ -1258,11 +1269,11 @@ AVLTree<T>* AVLTree<T>::mergeAVLTrees(AVLTree<T>* tree_1, AVLTree<T>* tree_2)
 template<typename T>
 int AVLTree<T>::Node::getSubtreeSize()
 {
-	if (this == nullptr)
+	if (this)
 	{
-		return 0;
+		return this->subtree_size;
 	}
-	return this->subtree_size;
+	return 0;
 }
 
 // find the node with the given rank
