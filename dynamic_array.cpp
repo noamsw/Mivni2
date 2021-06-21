@@ -25,6 +25,7 @@ public:
     //destuctor of array
     ~dynamic_array() {
         delete[] array;
+        // std::cout << "destroyed dynamic array" <<std::endl;
     }
     // delete at index
     void deleteAt(int index) {
@@ -40,18 +41,18 @@ public:
         capacity *= GROWTH_FACTOR;
         T *temp = new T[capacity];
         for(int i = 0; i < _size; i++) {
-            temp[i] = array[i];
+            temp[i] = std::move(array[i]);
         }
         delete [] array;
         array = temp;
     }
 
     // inserts an element at index
-    void insertAt(T element, int index) {
+    void insertAt(T& element, int index) {
         // check that the index is with in the range
         assert(0 <= index && index <= _size);
         // if the array is full, resize it
-        if(_size == capacity) {
+        if(_size >= capacity) {
             resize();
         }
         // move the values forward
@@ -66,7 +67,7 @@ public:
         array[index] = element;
     }
     // inserts an element after the last element
-    void append(T element) {
+    void append(T& element) {
         insertAt(element, _size);
     }
     //returns current size
